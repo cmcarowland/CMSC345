@@ -299,6 +299,7 @@ public class TestReservation
             c.add(Calendar.DATE, -1);
                 reservation.setReservationStartDate(TestUtils.formatDate(c.getTime()));
                 Assert.assertEqualsString(reservation.getReservationStartDate(), TestUtils.formatDate(c.getTime()));
+                Assert.assertNotEqualsString(reservation.getReservationStartDate(), oriStartDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
