@@ -1,3 +1,9 @@
-1! RoomWBath! Jan 02, 2025! Jan 05, 2025
-2! RoomWView! Jan 10, 2025! Jan 15, 2025
-3! NormalRoom! Feb 1, 2026! Feb 17, 2026
+1! RoomWBath! Jan 02, 2025! Jan 03, 2025! 1! 200
+2! RoomWView! Jan 10, 2025! Jan 11, 2025! 1! 175
+3! NormalRoom! Feb 1, 2026! Feb 2, 2026! 1! 120
+4! RoomWBath! Jan 28, 2026! Feb 11, 2026! 14! 2800
+5! RoomWView! Jan 28, 2026! Feb 11, 2026! 14! 2450
+6! NormalRoom! Jan 28, 2026! Feb 11, 2026! 14! 1680
+7! RoomWBath! Jan 1, 2026! Jan 1, 2027! 365! 73000
+8! RoomWView! Jan 1, 2026! Jan 1, 2027! 365! 63875
+9! NormalRoom! Jan 1, 2026! Jan 1, 2027! 365! 42720
