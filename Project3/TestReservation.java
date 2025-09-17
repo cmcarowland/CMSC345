@@ -132,7 +132,6 @@ public class TestReservation
             reservation = CreateReservationFromTestData(testData);
             testSetGuestID(reservation, testData.getCustId());
      
-
             reservation = CreateReservationFromTestData(testData);
             testSetRoom(reservation, testData.getRoomType());
         }
