@@ -19,23 +19,42 @@ import java.io.IOException;
 
 public class TestReservation
 {
+    // Flag enum: each value is a power of 2 for bitwise operations
+    public enum TestFlags {
+        CONSTRUCTION(1),
+        UUID(1 << 1),
+        GET(1 << 2),
+        SET(1 << 3),
+        CALCULATE_RESERVATION_NUMBER_OF_DAYS(1 << 4),
+        CALCULATE_RESERVATION_BILL_AMOUNT(1 << 5);
+
+        public final int value;
+
+        TestFlags(int value) {
+            this.value = value;
+        }
+    }
+
     /**
      * The main entry point for the test runner application.
-     * 
+     *
      * Reads test cases from a CSV file ("testcases.csv"), processes each line as a test case,
      * and executes the corresponding tests using the TestData and executeTests methods.
+     * The set of tests to execute can be controlled by passing an integer bitmask as the first
+     * command-line argument; if no argument is provided, all tests are executed.
      * Prints the results of each test case to the standard output.
      *
      */
     static public void main(String[] args) 
     {
+        int testsToExecute = args.length > 0 ? Integer.parseInt(args[0]) : -1;
         String file = "testcases.csv";
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 // Each line is a test case, split by comma if needed
                 TestData testData = new TestData(line);
-                executeTests(testData);
+                executeTests(testData, testsToExecute);
                 System.out.println();
             }
         } catch (IOException e) {
@@ -54,55 +73,82 @@ public class TestReservation
         return new Reservation(testData.getCustId(), testData.getRoomType(), testData.getStartDateString(), testData.getEndDateString());
     }
 
-    
     /**
-     * Executes a series of unit tests on the Reservation class using the provided test data.
+     * Executes selected unit tests on the Reservation class using the provided test data.
      *
      * This method prints test information, constructs Reservation objects from the given
-     * TestData, and runs various test methods to validate Reservation functionality such as:
-     * - UUID generation
-     * - Date handling
-     * - Guest ID and room type assignment
-     * - Start and end date setters/getters
-     * - Calculation of stay duration and bill amount
+     * TestData, and runs test methods based on the specified bitmask in testsToExecute.
+     * Supported tests include:
+     * - Construction and field validation
+     * - UUID uniqueness
+     * - Getter and setter methods for guest ID, room type, and reservation dates
+     * - Calculation of reservation duration and bill amount
      *
      * @param testData The TestData object containing input values and expected results for testing.
+     * @param testsToExecute Bitmask indicating which tests to run.
      */
-    static public void executeTests(TestData testData) {
+    static public void executeTests(TestData testData, int testsToExecute) {
         System.out.println("Testing Reservation " + testData.getCustId());
         System.out.printf("Arguments: %d, %s, %s, %s\n", testData.getCustId(), testData.getRoomType(), testData.getStartDateString(), testData.getEndDateString());
         System.out.println("------------------------------------------------------------");
-        Reservation reservation = testConstruction(testData);
-        testUUID(reservation);
+        if((testsToExecute & TestFlags.CONSTRUCTION.value) != 0)
+        {
+            Reservation reservation = testConstruction(testData);
+        }
 
-        reservation = CreateReservationFromTestData(testData);
-        testReservationDate(reservation);
+        if((testsToExecute & TestFlags.UUID.value) != 0)
+        {
+            Reservation reservation = CreateReservationFromTestData(testData);
+            testUUID(reservation);
+        }
 
-        reservation = CreateReservationFromTestData(testData);
-        testGuestID(reservation, testData.getCustId());
+        if((testsToExecute & TestFlags.GET.value) != 0)
+        {
+            Reservation reservation = CreateReservationFromTestData(testData);
+            testReservationDate(reservation);
+        
+            reservation = CreateReservationFromTestData(testData);
+            testGuestID(reservation, testData.getCustId());
+        
+            reservation = CreateReservationFromTestData(testData);
+            testRoomType(reservation, testData.getRoomType());
+        
+            reservation = CreateReservationFromTestData(testData);
+            testReservationStartDate(reservation, testData.getStartDateString());
 
-        reservation = CreateReservationFromTestData(testData);
-        testRoomType(reservation, testData.getRoomType());
+            reservation = CreateReservationFromTestData(testData);
+            testReservationEndDate(reservation, testData.getEndDateString());
+        }
 
-        reservation = CreateReservationFromTestData(testData);
-        testReservationStartDate(reservation, testData.getStartDateString());
-        testSetReservationStartDate(reservation, testData.getStartDateString());
 
-        reservation = CreateReservationFromTestData(testData);
-        testReservationEndDate(reservation, testData.getEndDateString());
-        testSetReservationEndDate(reservation, testData.getEndDateString());
+        if((testsToExecute & TestFlags.SET.value) != 0)
+        {
+            Reservation reservation = CreateReservationFromTestData(testData);
+            testSetReservationStartDate(reservation, testData.getStartDateString());
+        
+            reservation = CreateReservationFromTestData(testData);
+            testSetReservationEndDate(reservation, testData.getEndDateString());
+    
+            reservation = CreateReservationFromTestData(testData);
+            testSetGuestID(reservation, testData.getCustId());
+     
 
-        reservation = CreateReservationFromTestData(testData);
-        testSetGuestID(reservation, testData.getCustId());
+            reservation = CreateReservationFromTestData(testData);
+            testSetRoom(reservation, testData.getRoomType());
+        }
 
-        reservation = CreateReservationFromTestData(testData);
-        testSetRoom(reservation, testData.getRoomType());
 
-        reservation = CreateReservationFromTestData(testData);
-        testCalculateReservationNumberOfDays(reservation, testData.getStayDuration());
+        if((testsToExecute & TestFlags.CALCULATE_RESERVATION_NUMBER_OF_DAYS.value) != 0)
+        {
+            Reservation reservation = CreateReservationFromTestData(testData);
+            testCalculateReservationNumberOfDays(reservation, testData.getStayDuration());
+        }
 
-        reservation = CreateReservationFromTestData(testData);
-        testCalculateReservationBillAmount(reservation, testData.getExpectedTotal());
+        if((testsToExecute & TestFlags.CALCULATE_RESERVATION_BILL_AMOUNT.value) != 0)
+        {
+            Reservation reservation = CreateReservationFromTestData(testData);
+            testCalculateReservationBillAmount(reservation, testData.getExpectedTotal());
+        }
     }
 
     /**
@@ -176,7 +222,7 @@ public class TestReservation
      * @param reservation the Reservation object to compare against a newly created Reservation
      */
     static public void testUUID(Reservation reservation) {
-        System.out.println("---> UUID Tests");
+        System.out.println("---> GET UUID Tests");
         Reservation r2 = new Reservation(1, "RoomWBath", "Jan 02, 2025", "Jan 05, 2025");
         Assert.assertNotEqualsUUID(r2.getReservationID(), reservation.getReservationID());
     }
@@ -190,7 +236,7 @@ public class TestReservation
      * @param reservation the Reservation object whose reservation date is to be tested
      */
     static public void testReservationDate(Reservation reservation) {
-        System.out.println("---> Reservation Date Tests");
+        System.out.println("---> GET Reservation Date Tests");
             try {
                 Date d = new Date();
                 Assert.assertEqualsInt(1, areDatesSimilar(reservation.getReservationDate(), d));
@@ -207,7 +253,7 @@ public class TestReservation
      * @param oriID the expected original guest ID
      */
     static public void testGuestID(Reservation reservation, int oriID) {
-        System.out.println("---> Guest ID Tests");
+        System.out.println("---> GET Guest ID Tests");
         Assert.assertEqualsInt(reservation.getGuestID(), oriID);
     }
     
@@ -219,7 +265,7 @@ public class TestReservation
      * @param oriRoom the expected room type as a String
      */
     static public void testRoomType(Reservation reservation, String oriRoom) {
-        System.out.println("---> Room Type Tests");
+        System.out.println("---> GET Room Type Tests");
         Assert.assertEqualsString(reservation.getRoomType(), oriRoom);
     }
 
@@ -231,7 +277,7 @@ public class TestReservation
      * @param oriStartDate  the expected original start date as a String
      */
     static public void testReservationStartDate(Reservation reservation, String oriStartDate) {
-        System.out.println("---> Reservation Start Date Tests");
+        System.out.println("---> GET Reservation Start Date Tests");
         Assert.assertEqualsString(reservation.getReservationStartDate(), oriStartDate);
     }
 
@@ -245,7 +291,7 @@ public class TestReservation
      * @param oriStartDate  the original start date as a string
      */
     static public void testSetReservationStartDate(Reservation reservation, String oriStartDate) {
-        System.out.println("---> Reservation Start Date Tests");
+        System.out.println("---> SET Reservation Start Date Tests");
         Assert.assertEqualsString(reservation.getReservationStartDate(), oriStartDate);
         try {
             Date d = TestUtils.parseDate(oriStartDate);
@@ -267,7 +313,7 @@ public class TestReservation
      * @param oriEndDate the expected end date string to compare against
      */
     static public void testReservationEndDate(Reservation reservation, String oriEndDate) {
-        System.out.println("---> Reservation End Date Tests");
+        System.out.println("---> GET Reservation End Date Tests");
         Assert.assertEqualsString(reservation.getReservationEndDate(), oriEndDate);
     }
 
@@ -281,7 +327,7 @@ public class TestReservation
      * @param oriEndDate   the original end date string to verify and update
      */
     static public void testSetReservationEndDate(Reservation reservation, String oriEndDate) {
-        System.out.println("---> Reservation End Date Tests");
+        System.out.println("---> SET Reservation End Date Tests");
         Assert.assertEqualsString(reservation.getReservationEndDate(), oriEndDate);
         try {
             Date d = TestUtils.parseDate(oriEndDate);
@@ -305,7 +351,7 @@ public class TestReservation
      * @param oriID the original guest ID before modification
      */
     static public void testSetGuestID(Reservation reservation, int oriID) {
-        System.out.println("---> Guest ID Tests (" + oriID + ")");
+        System.out.println("---> SET Guest ID Tests (" + oriID + ")");
         int newGuestID = reservation.getGuestID() + 1;
         reservation.setGuestID(newGuestID);
         Assert.assertEqualsInt(reservation.getGuestID(), newGuestID);
@@ -322,7 +368,7 @@ public class TestReservation
      * @param oriRoom the original room type to compare against
      */
     static public void testSetRoom(Reservation reservation, String oriRoom) {
-        System.out.println("---> Room Type Tests (" + oriRoom + ")");
+        System.out.println("---> SET Room Type Tests (" + oriRoom + ")");
         Assert.assertEqualsString(reservation.getRoomType(), oriRoom);
         String newRoomType = "NormalRoom";
         if(reservation.getRoomType().equals(newRoomType)) {
