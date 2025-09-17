@@ -1,0 +1,94 @@
+Software Testing Scopes and Approaches
+Topics
+Software Testing
+Scopes of Testing
+Approaches to Testing
+Software Testing
+Testing is one of the most important activities in the development life cycle of software. During testing, you can see if the software that you have been working on really does what you think it should do. Regardless of what theories you have about how the software should work, it is during the testing phase that you see what the software actually does. It is critical that you take advantage of this opportunity to make the testing as effective and efficient as possible. You want to learn as much as possible about the software during the test phase so that if it does not work as expected you can still change it before it is released and delivered to your customer.
+
+Testing is always necessary because no matter how careful you are, the software you develop will likely have defects that can cause the software to fail. One of the most effective ways to find and remove these defects is to run tests.
+
+The problem is that testing can be very expensive, in terms of both labor and time. The tests have to be designed, developed, written, and applied to the software before you can determine how well the software works. In addition, it is almost impossible (except, perhaps, for the simplest of programs) to run all possible tests (exhaustive testing). No matter how many tests you are able to run, there will always be more for which you did not have time. Therefore, to be confident that your software will work as planned, you need to approach the testing very carefully, planning your tests for the maximum benefit.
+
+Scopes of Testing
+Software is normally a part of a much larger system, so we will mention the various types of software and system-level tests. Software testing commences during the earlier phases of development and can be described as testing "in the small." Following the object-oriented approach, the smallest unit is considered to be at the class level. As we integrate all the smaller units together, we form a subsystem or component. Once all the components are built, we integrate them into the environment in which they will execute. Testing is conducted during all phases, from conception of code to integration into a working system that is ready for delivery to the customer. Figure 1 represents the scopes of testing at the different stages of software development and identifies the party who performs each test.
+ 
+Scopes of testing at different stages.
+Figure 1
+Different Scopes of Tests
+
+Unit testing is performed by the original software engineers during the coding stage of the module or class. At the unit level it is necessary to develop a set of drivers or stubs in order to conduct testing. A small code segment or driver is developed to test the functionality of the module or to exercise the interface of the class. At times it may also be necessary to develop a placeholder for a subordinate module; a stub is used in this case. When you develop drivers and stubs, they should be kept as simple as possible because they are not released with the final product.
+
+Integration testing brings all the code pieces together into a cohesive whole to form the software architecture. During the integration testing phase, errors and defects may be uncovered that are relative to the interfacing of the modules, classes, subsystems, and components. Once the software subsystems or components are integrated and tested to achieve a level of confidence in the correctness of the software, they are integrated with the hardware components to form the end-state system architecture. Integration testing at the software level is typically conducted by the original software engineers who were involved in the software design.
+
+Ideally, system testing is performed by an independent test team on the cohesive whole, all the hardware and the software components working together. Several types of tests are performed during system testing, including:
+
+Recover
+Security
+Stress
+Performance
+Software test cases are designed to intentionally attempt to break the system to see if the software will detect and recover gracefully from faults. This type of testing is referred to as recovery testing.
+
+Information is a valuable asset to companies and is manipulated and stored as part of many computer-based systems. We refer to information as sensitive when, if obtained and used by the wrong person, it can cause harm to one's identity, life, or property. This sensitive nature of information determines the amount of security testing that needs to be designed and conducted on software. Security tests are designed to intentionally attempt penetration into the system and detect and exploit vulnerabilities in the software. Once the system has been penetrated, the software code can be maliciously modified. Many companies will hire a third party to perform extensive security tests because the design of these tests requires extensive technical knowledge. However, the software engineer can design simple tests to exploit known vulnerabilities (like common buffer overflow vulnerabilities) that exist in programming languages.
+
+Acceptance testing is performed by the intended users of the software to determine if the product is performing at an acceptable level and meets the needs of the customer and the user. Acceptance testing is also referred to as beta testing, application and end-user testing. One form of acceptance testing is when a beta or trial version of the software is released and tested in the field, the intended environment in which the software will be used, before the software is formally delivered to the customer. The experiences from using the beta version are gathered and evaluated by the software engineers and any necessary revisions are made before releasing the final version.
+
+An acceptance test plan is developed between the software engineer and the customer during the requirements analysis phase. The acceptance plan is used to specify the acceptable criteria or test scenarios that need to be satisfied by the software. Acceptance tests are created from the use case scenarios that were developed during the software requirements analysis phase. The software engineer works with the customer to derive the appropriate tests to ensure that the end user receives the intended functionality from the software. Acceptance tests are a set of black-box test cases that validate the correct output is delivered by the software when it is given a specific input. We will discuss white-box and black-box testing next.
+
+Approaches to Testing
+Two approaches are used by software engineers to design software tests: structural and functional. Both testing approaches are used to develop a test plan and to design a comprehensive set of test cases. Structural testing is referred to as the white-box test approach; functional testing is commonly referred to as the black-box test approach. White-box testing is conducted during code development and black-box testing is ideally conducted by a test team when coding is complete. Both testing approaches are essential in validating the attained level of correctness of the software and compliance with requirements.
+
+White-Box Testing
+
+The white-box, or structured, testing approach is focused on the implementation details of the software's logic paths. Test cases are developed following certain paths through the logic that can detect faults in the hardware, the application code, the programming language, or the operating system. In white-box testing, you focus on a certain sequence of instructions. The sequence of instructions comprises the processes, control structures, and mathematical expressions that are implemented in the logic used in the code. The main idea is to test each logic branch, decision point path, and calculation. These tests are designed to follow the instruction execution logic from the entry point of the algorithm through the exit point of the algorithm.
+
+In the object-oriented methodology to programming, we design each class to contain methods. In the software, each call to a class instance method is a good candidate for a test case. A method in a class contains one or more instructions of logic.
+
+Decision-control structures are implemented in all programming languages as conditional branch instructions, and each path should be tested. The most common decision-control structures are:
+
+if-then-else constructs
+selection statements (commonly known as case in Java and C++) conditional
+loops
+In white-box testing, we stress that every instruction and every decision direction must be executed at least once. The goal is to execute each logic path of the code to provide good coverage of the code statements in the software.
+
+Black-Box Testing
+
+With black-box testing, you develop your test cases based on the requirements of the component being tested. This way, you can make certain that all important requirements, and combinations of requirements, are validated to be working properly as specified in the test plan. Notice that this approach to testing is different from white-box testing. In fact, it is likely that if both techniques are applied, there will be many different test cases executed, which is a good thing, because it provides for more extensive testing of the software.
+
+The black-box testing approach focuses on the functional requirements of the software. This software testing approach attempts to find:
+
+incorrect or missing functions
+interface errors
+errors in data structure or external database access
+performance errors
+initialization and termination errors
+The black-box test assumes that the tester has little or no knowledge of the internals of the code. The tests are designed based on the requirements' description of what the software is supposed to do. Each black-box test case focuses on software's input and the expected output. When the test is performed, if the expected output is correct, then the test is successful in validating the functional requirement of the software. Following an object-oriented approach, the class is a good unit for testing. We can write a test case to exercise each public method defined within the class scope.
+
+Black-Box Test Case Design
+
+The key to planning effective and efficient testing is designing a good set of test cases. A test case is a specific set of inputs that will be read by your software to challenge its behavior. It is expected that, for each test case, your software will produce the appropriate answers as output. The selection of test cases should be as comprehensive and challenging as possible to the software so that your software will be exercised as much as possible. However, there exists the possibility that budget limits may restrict what you can test, so use good judgment in selecting and designing test cases.
+
+Consider the following software function (in the C programming language):
+
+A software function.
+We can define several test cases as follows in table 1:
+
+Table 1
+Example of Black-Box Test Cases
+
+Test case #	Side 1	Side 2	Expected Result	Actual Result	Pass | Fail
+1	2	4	4.47	4.47	Pass
+2	20	15	25	25	Pass
+3	-2	4	Invalid	Undefined	Fail
+Note that each set of input values forms a single test case, with an expected result. When the tests are actually run, the results are recorded and compared with the expected results to see if the software satisfies its requirement and executes correctly.
+
+Diagrams and Test Case Design
+
+In module 3 we presented several types of diagrams that are created during the requirements analysis and design phases of the development cycle of software. Diagrams present a pictorial view of software behavior and logic. By tracing through the diagrams, we can design a complete set of whitebox test cases. For example, the state transition diagram depicts the behavioral paths and the data flow diagram depicts the inputs and expected outputs for each software component. Test cases can be derived from the class diagram because it shows all the interface methods that can be invoked to manipulate the class data.
+
+Software engineers use diagrams as a starting point to develop the white-box and black-box test cases. 
+
+
+© 2025 University of Maryland Global Campus
+
+All links to external sites were verified at the time of publication. UMGC is not responsible for the validity or integrity of information located at external sites.
