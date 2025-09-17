@@ -9,7 +9,7 @@
 .PHONY: run clean build
 
 run: ./Classes/TestUtils.class ./Classes/TestData.class
-	java -cp ./Classes:w6.jar TestReservation.java -jar w6.jar
+	java -cp ./Classes:w6.jar TestReservation.java
 
 build: ./Classes/TestData.class ./Classes/TestUtils.class
 	echo "Build complete."
