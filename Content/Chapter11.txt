@@ -1,0 +1,243 @@
+Objectives
+
+Describe the basic concept of configuration management.
+Analyze the relationship between the software artifacts and the development process.
+Discuss the configuration management framework.
+Describe the naming model of artifacts.
+Describe the storage and access model of artifacts.
+Describe the integration and build process.
+Discuss the various automation tools for configuration management.
+Analyze managing configuration management.
+
+11.1 Software Configuration Management
+
+Software configuration management is the process of managing all the pieces and parts of artifacts produced as part of software development and support activities. In this chapter, we will occasionally refer to software artifacts as software items or software piece parts and will sometimes drop the word software that precedes the word artifact. Software configuration management is itself composed of a multitude of activities:
+Understanding the policy, process activities, and the resulting artifacts that need to be managed
+Determining and defining the framework that needs to be used to manage these artifacts
+Determining and bringing in any tools that need to be brought in to facilitate the management of these artifacts
+Training and ensuring that the agreed-upon configuration management process is practiced and adhered to
+Thus software configuration management is much more than just creating and keeping multiple versions of code or documents. Many organizations, both public and private, have guidelines on configuration management. The IEEE Guide to Software Configuration Management (Std. 1042–1987) and NASA's Software Configuration Management Guidebook are some examples. Software configuration management is also a key process of the Software Engineering Institute's Capability Maturity Model, which was introduced in Chapter 4. It is also often integrated with software change management process and the maintenance and support activities.
+
+11.2 Policy, Process, and Artifacts
+
+In order to determine which are the pieces or parts that need to be managed, it is important to understand the overall software development and support process and activities that will be utilized by an organization. A conservative and risk-averse organization that is developing large and complex software may choose to have a full waterfall process with inspections following every major activity such as requirements specification, design specification, coding, and test case generation. All documents and artifacts developed and inspected are codified and stored, providing a complete audit trail and tracing of all the material. Other organizations may have to adopt a full control of all the artifacts due to the type of industry they are involved in, such as the government or defense industry sector. These organizations would be more motivated to adopt configuration management of the software artifacts.
+On the other hand, a small and agile process-oriented organization may choose a process that places emphasis on only a few activities, such as requirements specifications and coding. Such an organization may choose to control only the final version of requirements specification and code, without keeping all the intermediate versions.
+The chosen process and the artifacts developed from the activities in that process will play a heavy role in the determination of what and to what level of detail we must manage. For example, an organization that adopts a process that moves from requirements through design and coding to multiple levels of testing before the final software product build may decide on managing all the following artifacts:
+Requirements specification
+Design specification
+Source code
+Executable code
+Test cases
+Here, source code includes logic code, database tables, and user screen scripts. Similarly, test cases include test scenarios written in English and test scripts with the associated test data. Depending on the development and support process, different types of artifacts may need to be managed. For example, if formal design inspections are a part of the process, then design inspection results may also be considered as vital artifacts that need to be managed.
+Managing versions of these artifacts as independent material is somewhat tedious but not very complex. The complexity increases when multiple artifacts and the relations among those artifacts need to be controlled. Consider the requirements specifications and the design specification. If we want to match these and control the interrelationship of each customer requirement with the resulting design elements to ensure traceability, then we must introduce a scheme that allows us to link the elements across two sets of artifacts. There are many other interartifact relationships such as the following that must be considered:
+Requirements and test cases
+Design elements and logic code segments
+Logic code segments and database tables
+User-interface screens and code segments
+Messages, help texts, and source code
+Test cases and logic code segments
+Database tables and initialization data
+This set of relationships may be represented in a more thorough and clearer matrix form. As an example, consider the interartifact relationships shown in Table 11.1. This example shows how the artifacts may be related. One may use another matrix to show a slightly different relationship.
+This relationship is further affected if different versions of each artifact must be considered. A software product may have several versions of requirements. For example, after an initial, general version of requirements is issued, there may then be a slightly different version for some special industry or customers that have different needs. Furthermore, there may have to be country-specific versions to handle, say, French, Japanese, or Brazilian requirements. Thus, we may need to handle the intra-artifact relationship.
+When the intra-artifact and interartifacts relationships need to be simultaneously considered, we might be facing an extremely intricate web of associations. Consider the four sets of artifacts in Figure 11.1.
+Table 11.1: A Matrix Showing Interartifact Relationships
+ Open table as spreadsheet
+ 	
+Requirements Elements
+Design Elements
+Code Logic
+UI Screens
+DB Tables
+Initialization Data
+Test Cases
+Requirements Elements
+ 	
+X
+X
+X
+ 	 	
+X
+Design Elements
+X
+ 	
+X
+X
+X
+X
+ 
+Code Logic
+X
+X
+ 	
+X
+X
+X
+X
+UI Screens
+X
+X
+X
+ 	 	 	
+X
+DB Tables
+ 	
+X
+X
+ 	 	
+X
+ 
+Initialization Data
+ 	
+X
+X
+ 	
+X
+ 	
+X
+Test Cases
+X
+ 	
+X
+X
+ 	
+X
+ 
+ Image from book
+Figure 11.1: Intra-artifact and interartifact relationships.
+Figure 11.1 shows the intra-artifact of different versions of requirements, design, code, and test cases respectively in a vertical fashion with solid lines. The interartifact relationship of, for example, French requirements to French design elements, to French coding elements, and French test cases respectively is shown horizontally with dotted lines.
+If we trace a normal software product family that goes through multiple releases, covering multiple countries with different fix and service packages over a period of five or six years, the relationship diagram becomes completely unwieldy.
+Consider the following example where a general software product with three country-specific versions goes through an annual new release through five years with an additional semiannual fix/upgrade service package. We will follow only a single artifact type, the design document, for the following illustration:
+Original: The general version plus three country-specific versions add up to a total of four artifacts.
+Annual releases: Each year there is a new release with its updated design artifacts. Thus there are 20 design artifacts (1 general + 3 country-specific = 4) after five years.
+Semiannual (2 fix/updates) for five years: Each of the general releases has two fix/updates service packages associated with it annually. The first-year releases will have a total 5 × 8 = 40 service packages and thus will have 40 design update artifacts. The second-year release will have 4 × 8 = 32 service packages and will thus have 32 design update artifacts. The third-year release will have 3 × 8 = 24 design update artifacts. For five years, there will be a total of
+SUMn=1, 5 (n × 8) = 120 service packages
+Thus, there will be a total of 120 design update artifacts associated with the 120 service packages.
+Just tracing the design artifacts for the preceding example product, we see that the 4 original design artifacts expanded to a total of 20 new design artifacts plus 120 design fix artifacts, or 140 design artifacts in a span of 5 years. An organization that decides to control the related requirements documents, the related code, and the related test cases would find itself managing a horrendous number of interrelated artifacts.
+11.2.1 Business Policy Impact on Configuration Management
+
+The impact of a process decision on the management and control of artifacts can be further illustrated with the problem of allowing "branching" from intermediate artifacts. Consider the requirements documents in Figure 11.1. We can have a policy that allows only the following updates and modifications to requirements:
+Only through the general version
+Only to the latest version
+The country-specific versions of French, Japanese, and Brazilian requirements are reviewed for appropriate updates as a result of the change to the general version. This policy enforces a sequential update process because the country-specific requirements are all successors to the general requirements. Now, let's consider a policy that allows a change to the French requirements version 2 after all the requirements artifacts have been updated to version 3. This is illustrated in Figure 11.2.
+Image from book
+Figure 11.2: Allowing branching.
+The branching from an intermediate artifact, French version 2 to French version 2.1, will require a reexamination of all the existing version 3 requirements to ensure that the change to French version 2 did not conflict with the existing version 3 requirements. The actual impact is much more if we include other artifacts such as the existing version 3 design and the version 3 code. We would need to examine for any conflict to all these existing artifacts. A business policy that allows customers not only to stay on French version 2 without migrating to the latest version 3 but also to update to French version 2, will impose a development policy and a process that greatly influences the management and control of the artifacts.
+11.2.2 Process Influence on Configuration Management
+
+Clearly the development and support process influences how the artifacts are managed. Consider the case of a large, complex software development that marches through three types of formal testing: (1) functional, (2) component, and (3) system. Only after all three formal testing activities are complete will the software product be built into a release, "golden" CD, which is then copied for distribution to the customers and users. Figure 11.3 shows how unit-tested artifacts are first gathered and integrated for functional testing. The ones that have all of their problems fixed are considered to have passed. Only those that passed the functional testing are promoted to the functionally tested level. The code that passes the component test is then promoted to the component-tested level and eventually promoted to the system-tested "golden" copy. The concept of promotion of artifacts in a multilevel test process is to ensure that those codes tested at a certain level are locked and given no opportunity to be inadvertently degraded or regressed through some change. Along with the code, there are design material, test scripts, data, help texts, and other associated materials that must also be promoted from level to level until the final release.
+Image from book
+Figure 11.3: Promotion of artifacts.
+Although Figure 11.3 does not explicitly show the promotion of all the associated artifacts that are stored in file libraries, these are indeed promoted with the code. It is just as important to ensure that all the artifacts at a certain tested level are promoted so that no regression or degradation occurs to them. The notion of artifact promotion in a test process requires certain capabilities, such as locking and access control, in configuration management.
+
+11.3 Configuration Management Framework
+
+In order to manage and control all the piece parts of the artifacts, software engineers must establish a framework to control these items. From the previous section, we can see that the software development and support policies and process will greatly influence the configuration management framework. We will discuss two main models that need to be included in the configuration management framework.
+Naming model
+Storage and access model
+11.3.1 Naming Model
+
+To properly control all the piece parts, there must be a way to uniquely identify each item or artifact and to be able to associate those items that are related. A sample naming model will be presented here. Depending on the business needs and process assumptions, different naming models may be created. The model here assumes the following:
+There is a unique software product name.
+There will be multiple types of artifacts (e.g., design documents, source code, executable code, requirements picture images, test scripts, test data).
+There may be multiple forms of artifacts (e.g., text, spreadsheets, picture images, audio sound bytes).
+There is a scheme that requires at least two levels of grouping. Software release level is the primary factor. Within a release level, there may be multiple levels of versions.
+There will be translated, multiple-country software releases.
+For this set of assumptions, the following six-part naming model may be used. The periods are used as the delimiters to separate the naming components.
+
+PP. CC. RRR. VVV. TT. FF
+Part 1—PP: The two-position slot of PP is the software product code. If P is allowed to be alphanumeric, then there are 36 legitimate characters for each position. Thus PP will give us 362, or 1296, possible product codes. For most software organizations that is more than sufficient.
+Part 2—CC: The next two positions, CC, represent the country code. Allowing 26 alphabet characters for each position, the two positions of CC will allow 262, or 676, countries. For most software products, the number of supported country versions is far fewer than 676. Most commercial products support English, French, German, Spanish, Japanese, Chinese, Korean, and some Scandinavian countries. Unless the software product is for organizations such as the United Nations, 676 would be plenty. One may consider, for example, using the two-position ISO 3166 code for officially representing the countries.
+Part 3—RRR: The three-position RRR part represents the release number of the software. If we confine ourselves to just the numerical figures 0 through 9, then RRR can represent 103, or 1000, releases. Assuming the product takes on two releases per year, a three-positional numerical part will allow us to be in business for 500 years.
+Part 4—VVV: A three-positional versioning within each release, VVV is restarted for each release. Again, assuming only a numerical figure of 0 through 9, VVV would provide us with 1000 versions within each release. The artifact that will need a large number of versioning within a release is probably the code module. A code module may go through 1 to 100 versions of changes prior to release during the first year of development. Then, assuming a fairly error-prone or change-prone module, it may go through another 50 versions of changes per year during the maintenance and support period. This will allow for a program module life span of about 19 years, including the first year of development. In today's fast-paced technology world, a module life of 19 years should be quite sufficient.
+Part 5—TT: The two-positional type code describes the kind of artifact. It may be a requirements document, high-level design diagrams, database tables, test scenarios, test data, or source code. Here, T may be alphabetical and thus have 26 combinations. The two-positional code, TT, provides us with 262, or 676 different types of artifacts. This number of types of artifacts should be ample for even the most complex software development and maintenance.
+Part 6—FF: The format represents the form the artifact is represented. The artifact may be in a document form, in the form of a spread sheet, in executable code form, or in a jpeg image form. F may be a numeric figure between 0 through 9. Thus FF provides 100 different types of forms the artifact may be in.
+Note that more combinations may be represented if we differentiate uppercase and lowercase letters. If necessary, pure numeric fields may also be changed to alphanumeric for expansion, and, of course, the number of positions for each part may be expanded. This six-part naming model may thus be used for a wide variety of software product development and support. The naming model is the key to uniquely identifying the items and to creating relationships among the items. In choosing tools, however, we need to pay special attention to the naming conventions that the tool may prescribe onto an organization. For example, compilers may require a special suffix or prefix for a source code file of different programming languages.
+In addition to the naming model, a separate item-attribute description file, sometimes called an attribute model, may also be created. This attribute model essentially defines the characteristics associated with each of the artifacts, such as who the owner of the artifact is or when it was first created. It facilitates a richer artifact identification mechanism and may be included as a complementing companion to the naming model.
+11.3.2 Storage and Access Model
+
+The second key model to the configuration management framework is the storage and access model, which defines the facilities needed to store and to control the access of all the software artifacts. There are two fundamental functions in the model:
+create
+delete
+The create function provides the capability to initially generate a new artifact and store it for configuration management. The delete function is the counterpart of create. The delete function destroys the artifact and eliminates it from configuration management.
+There is also a set of access facilities in the model:
+view
+modify
+return
+There are two types of retrieve functions. The view function allows the user to retrieve the artifact for reading purposes. The modify function allows the user to retrieve the artifact for the purpose of making changes to the artifact. The reason behind the differentiation is that when an artifact is retrieved by many users to be viewed only, there is no problem associated with contention. An artifact retrieved for the purpose of making changes can cause incompatibilities and conflicts. For example, users A, B, and C may all want to retrieve an artifact X to make their individual changes. Unless these three users communicate with each other while making their individual changes to artifact X, there is a strong possibility that the individual changes may conflict with each other. This possibility is greatly increased during test time when multiple changes may be occurring to a source code module. Thus a modify function, which is a controlled retrieval, is needed. The modify function allows only one user to retrieve the artifact for change purposes and prevents the conflict and contention problems. While the artifact is being modified the retrieval of that same artifact using the modify function is disabled for other users; however, others may still view that same artifact. The return function allows the modified artifact to be stored with the new modifications, and it reenables the modify function for that artifact. It is not possible to return an artifact unless that same person retrieved that artifact with the modify function. Thus the modify and the return functions are paired. In addition, the return function may also include an automatic incrementing of the version number of the artifact that is returned. These access functions with the automatic incrementing of version number provide a basic set of facilities for what is often called version control.
+In many existing configuration management or version control products, the terms check-in and check-out are used. There are usually two forms of check-out. Check-out for read-only would be the same as the view function discussed previously, and check-out for edit would be the same as the modify function. Check-in would be the same as the return function.
+There is also a set of control and service functions needed for the storage and access model. The extent of service functions required would depend on how much versatility is wanted for the configuration management. There are several examples of service functions:
+import
+export
+list
+set (release number or version number)
+increment (release number or version number)
+change (product code, country code, artifact type, or artifact form)
+gather
+merge
+promote
+compare
+The import and export functions allow the artifacts to be brought into and moved out of the existing configuration management framework. The list function provides a listing of all the artifacts by product code, release number, or by some other identifier. The set function allows the establishment of a release number or version number of an artifact. Although the earlier described return function may include a version incrementing feature, the increment service function allows the release number or the version number to be explicitly incremented by the desired amount. It may also allow decrementing through incrementing by a negative amount. The change function provides the service to alter the product code or the country code or any part of the artifact name. The gather function may specify and link all the related artifacts by product code or by release number. For example, we may gather all the related artifacts by a product and country code and then export them to another organization. The merge function combines a change in one artifact into another artifact. This function may be useful if a set of fixes or changes is made to an existing, released artifact and that same set of changes needs to be incorporated into another artifact that is being prepared for the next release. Thus the merge function is helpful for multiple, parallel development. The promote function allows the designated artifacts to be moved to a different status. The usage of the promote function was earlier explained in the example of promoting tested code to different status levels prior to release. Often, especially in service and maintenance of a module, we would like to see what previous changes were made. A compare function will allow us to see the differences between two artifacts or two versions of the artifact.
+Many more service functions may be incorporated into the storage and access model if needed. An example of an additional function may be a locking and unlocking mechanism. Another example would be the where-used or where-referenced function. It would allow us to find all the artifacts that reference a given artifact. The where-used function was extensively utilized several years ago when we were searching for all modules that contained or used the date field in order to solve the year 2000 problem.
+The configuration management framework described here would certainly be easier to implement if we could automate some or most of the activities through an automated tool.
+There is a very important activity called integration and build related to the configuration management framework. It is a must for large software development. The amount of related code and data that must be processed into one set of executables can be a daunting process without formal control. This activity will be discussed separately in the next section.
+
+11.4 Build and Integration and Build
+
+The build process is a set of activities associated with the integration and conversion of source files to a set of executable files targeted for a specific execution environment. The execution environment includes both the hardware and the software system that runs the software that was constructed during the build process.
+The build cycle for a single program is a fairly simple one that every programmer is familiar with. The activities involve two major steps:
+Compile
+Link
+The source code is compiled first. Any compilation error is then fixed and resubmitted for recompile. As soon as the source code is successfully compiled, it is linked with all the needed, externally referenced items that are relatively limited in number. Once the link activity has been successfully completed, the program is ready for testing, debugging, fixing, and so on.
+Now consider a large, complex software application that has hundreds of source files that may undergo integration. These interrelated artifacts must be properly controlled or the build process may fail after several hours of processing. A common mistake in a multimember development team is to have a change made to a source code without the knowledge of other members. The other modules that depend on this changed module have a high probability of a reference mismatch that will cause the build activity to crash. As the build process becomes longer and more complex, a special build file, sometimes called a descriptor file or configuration file, is used to manage and control the build activities. A popular build file from the C and UNIX system days of the 1970s and 1980s is the makefile used by the Make function. The build file controls the order of the following activities of a software build cycle:
+Dependency and cross-reference checking
+Compilation of source code into executables
+Linking the executables
+Generating any required data file
+With an automated tool, the build process of a complex software system can be greatly alleviated. After a build file is defined, the automated tool will then process the build cycle according to the build file. For large, complex software, the complete build cycle may take more than 6 or 7 hours. Because of the lengthy time needed for these builds, they are often performed at night. You may hear the term nightly builds used for this process.
+Our experiences with large software development have also taught us to ensure that if the current build process fails, we are not left with nothing. That is, the previously built system is always kept as a backup. Should the current build cycle fail, then the system from the last build remains as the most recent system and may still be used to continue activities such as testing. Having a build file will certainly help us trace and correct some of the build process errors. The build file can serve as an audit mechanism for the build process. Because the build cycle for a large system is so long, we often break it into parts. This allows us to check to see that each step is completed properly before going on to the next step; it prevents us from having to restart and repeat a long build cycle when something fails at the end due to a mistake in one of the earlier steps.
+When the software is in the test phase of the development cycle, bugs are found and fixed on a daily basis. Not all the source code is affected by these fixes and changes. Often only a small number of source programs are modified. In such cases, there is no need to perform a complete rebuild, but extreme care must be observed in these partial builds. Finally, when the total development cycle is completed and the final release is ready to be developed, a complete rebuild from the entire source should be performed. One last caution: the final build must ensure that the software system built is for the run-time environment of the targeted users, not just for the developers' environment. There have been cases where everything executes well on the developers' system, but due to some differences in the environments such as an old version of an executable in some library the software will not run properly on the users' environment.
+
+11.5 Tools for Configuration Management
+
+As mentioned earlier, software configuration management is a set of activities related to controlling the piece parts resulting from software development and support. In large software projects, these activities can be tedious and complex, and thus very prone to error. It thus makes sense to automate as many of these activities as possible.
+These configuration management tools may be viewed in three tiers. The first basically performs version control and change control, processes that are often available without any change. Some of the earlier and more popular ones applied mostly to controlling source code are the Revision Control System (RCS), which was written by Walter Tichy at Purdue University, and the Source Code Control System (SCCS), which was provided with most of the UNIX systems. Today, GNU (which is an acronym that stands for "GNU's Not UNIX") and the Free Software Foundation (FSF) make a clone of SCCS known as CSSC available. Other tools include Concurrent Versions Systems (CVS); Project Revision Control System (PRCS), which is a tool like CVS and RCS with an easier-to-use front end that has been developed by Paul Hilfinger of the University of California, Berkeley; and Subversion, a CVS replacement tool sponsored by Tigris.org, another open source community focused on tools for collaborative software development. The Suggested Readings section at the end of this chapter provide references to these tools.
+The second tier of configuration management is to include the build function. One of the popular earlier build tools was the Make utility that came with the UNIX systems, created by S. I. Feldman of AT&T Bell Labs in the mid 1970s. This function uses a descriptor or configuration file, such as the makefile, as its direction to find all the source files and the dependencies among them in generating the final executable file. Other build tools that are free of charge include Odin, Cons, SCons, and Ant.
+Odin is a build tool much like the Make utility. Although it is more advanced and runs faster than Make, its descriptor file is not compatible with the makefile, which made it less attractive as an immediate replacement for Make. Cons is another build tool, released in 1996 by Robert Sidebotham and now maintained by Rajesh Vaidheeswarren. It is meant to be an improvement over the Make tool and works on several platforms, including AIX, FreeBSD, HPUX, Linux, Windows NT, and Solaris. It is distributed under the GNU General Public License as published by the Free Software Foundation. SCons is based on the architecture of Cons and is a result of the competition in 2000 sponsored by Software Carpentry. It was first released in 2001 under the nonrestrictive MIT license. Apache Ant (Another Neat Tool), distributed by the Apache Software Foundation, is a Java-based Make-like build tool started by James Davidson, a freelance software developer, to help build Tomcat, which is an Apache web server engine. Because it is XML based, Ant configuration file is different from the UNIX shell-based commands of Make.
+The third tier of software configuration management tools to integrate the configuration management activities with the development and support process activities. This is a feature that is not included in most of the free wares. Only a limited number of commercially available configuration management tools have integrated with some of the development and support process activities. For example, the requirements and versions of requirements artifacts developed using a requirements tool will often remain within that requirements tool. The requirements artifacts are rarely "tied" to the related design document, source code, and test cases. The procedure that is most often supported by the more sophisticated configuration management tools is the change management process. There is not yet a complete development process–integrated third-tier software configuration management tool.
+There are, however, several commercial configuration management tools available for large software development and support that are attempting to cover more than simply the source code artifacts. Because of their relatively richer functionality, these commercial tools are much more complex. The following three tools are probably the most prevalent ones at the writing of this text:
+ClearCase
+PVCS (Serena ChangeMan)
+Visual SourceSafe
+ClearCase is a family of software configuration management tools that operates with multiple development environments such as the Microsoft Visual Studio.Net, open source Eclipse, IBM WebSphere Studio, and Rational Application Developer. It also provides an extensive build capability. Initially released by Atria, it was then bought by Rational, which in turn was acquired by IBM. Made for large, complex, multiteam software development and support, it is now known as IBM Rational ClearCase.
+PVCS is also a family of software configuration management tools. It started as a tool set more appropriate for medium-sized development. In 2004, its owning enterprise Merant was acquired by Serena Software. The PVCS family of tools is now converted and integrated into the Serena ChangeMan family of tools.
+Visual SourceSafe started as a simple code version control tool developed by One Tree Software. Since its acquisition by Microsoft in 1994, the tool has grown considerably and is integrated with the Microsoft development environment. However, it still predominantly focuses on version control. It is suited for teams that are small and geographically distributed.
+Currently, there is no single configuration management tool that can manage all the different artifacts and their interdependencies, and it may be necessary to cobble several tools together. In deciding which tools are a best fit for your particular organization, consider the following questions:
+What artifacts are important to the organization and how are they related? Should those artifacts be managed under some type of automated tool and for how long?
+Does the specific automation tool have all the (1) necessary and (2) desired configuration management functions?
+Does the specific automation tool run in the development and support environment of the organization and handle all the different types of artifacts (e.g., supported programming language, design language, configuration file script language)?
+Will the existing naming model work with the automation tool or does the naming model need to be modified? If the names need to be modified, is there any conversion tool to help?
+Does the specific automation tool generate the artifacts that will run in the users' environment without any change to that environment?
+Can the tool accommodate geographically separate, multisite development?
+How many resources are required to run the specific automation tool (e.g., CPU speed, memory)?
+Is the specific automation tool supported? How is it supported (e.g., on a 24/7 schedule)?
+How often is the automation tool updated and new releases made available?
+Does the tool vendor provide any formal education? In what form?
+Are there documentations such as user and reference manuals?
+Are there current reference accounts that you may either visit or call?
+Finally, unless the automation tool is free, you should check the price of both the product and the support service of the tool. Many tools are priced and licensed by the number of users or by an enterprise-wide agreement.
+
+11.6 Managing the Configuration Management Framework
+
+Software configuration management is considered one of the successful areas that benefited directly from the contributions made in software engineering practices and research. We cannot assume though that it is able to operate automatically by itself. There continues to be a need for overt emphasis in software configuration and release management. Software configuration management should be brought into an organization in a planned fashion, possibly in stages.
+In its simplest form, we have to make sure that all the source code materials are properly compiled and linked to form a releasable package that users can simply install and execute. Of course, in order to ensure that all the source materials are the right source materials during and throughout the development stages, we must introduce and implement the discipline of configuration management. The fundamental discipline involves keeping clear account of the multiple versions of source material and being able to deliver any one of those versions for integration and build, which generates the desired software release for users. As the number of coding artifacts and the frequency of changes increase, a person, called the configuration management administrator, along with some automation, must be introduced.
+After mastering the fundamental software configuration management discipline in development, we can then branch into support activities. Making multiple changes to modules at a fairly frequent pace is an inherent part of software support and maintenance. Applying software configuration management to the support process is a natural extension from development.
+Once all the code and code-related artifacts are placed under configuration management, the organization is ready to include other artifacts, such as requirements, design, or test case artifacts. Keeping all the other artifacts and maintaining the proper relationships require an additional level of sophistication. The configuration management administrator needs to be brought in to help design a broader system that will allow us to store, access, trace, control, and relate all these artifacts. We should be able to generate a complete software product package that includes all the requirements, associated design documents, inspection/review results, change requests, source code, executable code, data, test cases and scripts, test data, test reports and results, reference manuals, and marketing brochures. This level of sophistication requires the organization to have a clearly stated development and support process, a well-defined set of artifacts generated from the process activities, and an integrated configuration management system.
+A key to success in any system is having knowledgeable and motivated team members, clear goals, and good process and tools to help users. Software configuration management is no different. The participating software development and support engineers must all be trained and knowledgeable in configuration management, in the reasons and goals behind configuration management, in the process involved, and in the usage of the associated tools. These management steps should be taken before, or at least at the very early stages of, the actual software development and support activities.
+
+11.7 Summary
+
+A large, complex software project requires the proper management of all the artifacts that are generated. In addition, these artifacts have a set of complicated relationships that must be accounted for in order to produce a release and to be able to support that release.
+A configuration management framework is composed of two main parts:
+Naming model
+Storage and access model
+Coupling these two models with the integration and build process, we can manage the software piece parts that are generated and can produce different software releases for users. Various tools are discussed for different levels of sophistication in automating configuration management. These range from version control to integration and build, interartifact management, and process control. The introduction of configuration management to an organization should also be brought in with a good plan and possibly in stages.
